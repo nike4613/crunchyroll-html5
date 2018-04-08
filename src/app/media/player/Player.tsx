@@ -15,7 +15,7 @@ import { ChromeTooltip, IChromeTooltip } from './chrome/Tooltip';
 import { parseAndFormatTime } from '../../utils/time';
 import { IRect } from '../../utils/rect';
 import { BezelComponent } from './chrome/BezelComponent';
-import { ICON_PAUSE, ICON_PLAY, ICON_SEEK_BACK_5, ICON_VOLUME, ICON_VOLUME_HIGH, ICON_SEEK_FORWARD, ICON_SEEK_FORWARD_5, ICON_SEEK_BACK_10, ICON_SEEK_FORWARD_10, ICON_VOLUME_MUTE } from './assets';
+import { ICON_PAUSE, ICON_PLAY, ICON_SEEK_BACK_5, ICON_VOLUME, ICON_VOLUME_HIGH, ICON_SEEK_FORWARD, ICON_SEEK_FORWARD_5, ICON_SEEK_BACK_10, ICON_SEEK_FORWARD_10, ICON_VOLUME_MUTE, ICON_SETTINGS } from './assets';
 import { BufferComponent } from './chrome/BufferComponent';
 import { ISubtitle } from 'crunchyroll-lib/models/ISubtitle';
 import { SubtitleToAss } from '../../converter/SubtitleToAss';
@@ -57,6 +57,7 @@ export class Player extends Component<IPlayerProps, {}> {
   private _sizeButtonRect: IRect;
   private _fullscreenButtonRect: IRect;
   private _volumeMuteButtonRect: IRect;
+  private _settingsButtonRect: IRect;
 
   private _autoHide: boolean = true;
   private _autoHideTimer: number;
@@ -560,6 +561,17 @@ export class Player extends Component<IPlayerProps, {}> {
     e.preventDefault();
   }
   
+  private _onSettingsButtonHover() {
+    const btnRect = this._settingsButtonRect;
+    this._setTooltip({
+      text: 'Settings'
+    }, btnRect.left + btnRect.width/2);
+  }
+  
+  private _onSettingsButtonEndHover() {
+    this._tooltipComponent.base.style.display = "none";
+  }
+  
   private _onActionClick(e: BrowserEvent) {
     this.base.focus();
     
@@ -639,6 +651,8 @@ export class Player extends Component<IPlayerProps, {}> {
       .querySelector(".chrome-fullscreen-button")!.getBoundingClientRect();
     const volumeMuteButtonRect = this._bottomComponent.base
       .querySelector(".chrome-mute-button")!.getBoundingClientRect();
+    const settingsButtonRect = this._bottomComponent.base
+      .querySelector(".chrome-settings-button")!.getBoundingClientRect();
 
     this._tooltipBottomRect = {
       width: bottomRect.width,
@@ -669,6 +683,12 @@ export class Player extends Component<IPlayerProps, {}> {
       height: volumeMuteButtonRect.height,
       left: volumeMuteButtonRect.left - rect.left,
       top: volumeMuteButtonRect.top - rect.top
+    };
+    this._settingsButtonRect = {
+      width: settingsButtonRect.width,
+      height: settingsButtonRect.height,
+      left: settingsButtonRect.left - rect.left,
+      top: settingsButtonRect.top - rect.top
     };
   }
 
@@ -728,6 +748,8 @@ export class Player extends Component<IPlayerProps, {}> {
     const onFullscreenButtonEndHover = () => this._onFullscreenButtonEndHover();
     const onVolumeMuteButtonHover = () => this._onVolumeMuteButtonHover();
     const onVolumeMuteButtonEndHover = () => this._onVolumeMuteButtonEndHover();
+    const onSettingsButtonHover = () => this._onSettingsButtonHover();
+    const onSettingsButtonEndHover = () => this._onSettingsButtonEndHover();
     const onCuedThumbnailClick = () => {
       if (this._config && this._configCued) {
         this._updateChromelessPlayer(this._config);
@@ -780,7 +802,9 @@ export class Player extends Component<IPlayerProps, {}> {
           onFullscreenButtonHover={onFullscreenButtonHover}
           onFullscreenButtonEndHover={onFullscreenButtonEndHover}
           onVolumeMuteButtonHover={onVolumeMuteButtonHover}
-          onVolumeMuteButtonEndHover={onVolumeMuteButtonEndHover}></ChromeBottomComponent>
+          onVolumeMuteButtonEndHover={onVolumeMuteButtonEndHover}
+          onSettingsButtonHover={onSettingsButtonHover}
+          onSettingsButtonEndHover={onSettingsButtonEndHover}></ChromeBottomComponent>
       </div>
     );
   }
