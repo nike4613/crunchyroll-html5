@@ -15,7 +15,7 @@ import { ChromeTooltip, IChromeTooltip } from './chrome/Tooltip';
 import { parseAndFormatTime } from '../../utils/time';
 import { IRect } from '../../utils/rect';
 import { BezelComponent } from './chrome/BezelComponent';
-import { ICON_PAUSE, ICON_PLAY, ICON_SEEK_BACK_5, ICON_VOLUME, ICON_VOLUME_HIGH, ICON_SEEK_FORWARD, ICON_SEEK_FORWARD_5, ICON_SEEK_BACK_10, ICON_SEEK_FORWARD_10, ICON_VOLUME_MUTE, ICON_SETTINGS } from './assets';
+import { ICON_PAUSE, ICON_PLAY, ICON_SEEK_BACK_5, ICON_VOLUME, ICON_VOLUME_HIGH, ICON_SEEK_FORWARD, ICON_SEEK_FORWARD_5, ICON_SEEK_BACK_10, ICON_SEEK_FORWARD_10, ICON_VOLUME_MUTE } from './assets';
 import { BufferComponent } from './chrome/BufferComponent';
 import { ISubtitle } from 'crunchyroll-lib/models/ISubtitle';
 import { SubtitleToAss } from '../../converter/SubtitleToAss';
