@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
-import { IPlayerApi, PlaybackState } from "../../IPlayerApi";
-import { EventHandler } from "../../../../libs/events/EventHandler";
-import { SettingsButton } from "../SettingsButton";
+import { IPlayerApi, PlaybackState } from "../IPlayerApi";
+import { EventHandler } from "../../../libs/events/EventHandler";
+import { PopupContainerComponent } from "../chrome/PopupContainerComponent";
 import { IContentDescriptor, IInfoContentDescriptor, IListContentDescriptor, IComponentListItem, instanceofIComponentListItem, instanceofITextListItem, IMenuContentDescriptor, ISelectorContentDescriptor } from "./IContentDescriptor";
 import { isIPv6 } from "net";
 
@@ -13,37 +13,67 @@ export enum PopupType {
 }
 
 export interface IPopupProps {
-  api: IPlayerApi;
   type: PopupType;
-  parent?: Popup;
-  topButton: SettingsButton;
+  parent?: PopupComponent;
+  owner: PopupContainerComponent;
   content: IContentDescriptor;
+  xpos?: number;
+  ypos?: number;
 }
 
-export class Popup extends Component<IPopupProps, {}> {
+export class PopupComponent extends Component<IPopupProps, {keepOpen:boolean}> {
+  private _name: string;
+
   private _handler = new EventHandler(this);
   
   private _type: PopupType;
   private _contentDescriptor: IContentDescriptor;
-  private _parent?: Popup;
-  private _topButton: SettingsButton;
-  
-  private _keepOpen: boolean = false;
+  private _parent?: PopupComponent;
+  private _owner: PopupContainerComponent;
+  private _content: JSX.Element;
 
   private _selectOptions: HTMLInputElement[] = [];
+
+  constructor(props: IPopupProps) {
+    super(props);
+
+    this._type = props.type;
+    this._contentDescriptor = props.content;
+    this._parent = props.parent;
+    this._owner = props.owner;
+    this._name = this._contentDescriptor.name;
+
+    this._content = this._processContent();
+
+    this.state = {keepOpen: false};
+  }
 
   private _onFocus() {
 
   }
 
   private _onBlur() {
+    if (!this.state.keepOpen) {
+      if (this._parent){
+        this._parent.setState({keepOpen:false});
+        this._parent._onBlur(); // force call this on parent
+      }
 
+      this._owner.destroyPopup(this._name);
+    }
+  }
+
+  shouldComponentUpdate(): boolean {
+    return false; // never update
+                  // no re-renders needed
   }
 
   componentDidMount() {
     this._handler
       .listen(this.base, 'focus', this._onFocus, { passive: true })
       .listen(this.base, 'blur', this._onBlur, { passive: true });
+    this.base.style.top = this.props.ypos + "px";
+    this.base.style.left = this.props.xpos + "px";
   }
 
   componentWillUnmount() {
@@ -90,7 +120,7 @@ export class Popup extends Component<IPopupProps, {}> {
 
         if (showSub)
           onClick = () => {
-            this._topButton.showPopup(item.subMenu!, item.subMenuType!, this);
+            this._owner.showPopup(item.subMenu!, item.subMenuType!, this);
           };
         else if (item.onClick) 
           onClick = () => {
@@ -143,16 +173,9 @@ export class Popup extends Component<IPopupProps, {}> {
     return (<br></br>);
   }
 
-  render(props: IPopupProps): JSX.Element {
-    this._type = props.type;
-    this._contentDescriptor = props.content;
-    this._parent = props.parent;
-    this._topButton = props.topButton;
-
-    let content = this._processContent();
-
+  render(): JSX.Element {
     return (
-      <div class="popup">{content}</div>
+      <div class="popup">{this._content}</div>
     );
   }
 }

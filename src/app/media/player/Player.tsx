@@ -19,6 +19,7 @@ import { ICON_PAUSE, ICON_PLAY, ICON_SEEK_BACK_5, ICON_VOLUME, ICON_VOLUME_HIGH,
 import { BufferComponent } from './chrome/BufferComponent';
 import { ISubtitle } from 'crunchyroll-lib/models/ISubtitle';
 import { SubtitleToAss } from '../../converter/SubtitleToAss';
+import { PopupContainerComponent } from './chrome/PopupContainerComponent';
 
 export interface IPlayerProps {
   config?: IPlayerConfig;
@@ -49,6 +50,7 @@ export class Player extends Component<IPlayerProps, {}> {
   private _bottomComponent: ChromeBottomComponent;
   private _tooltipComponent: ChromeTooltip;
   private _bezelElement: BezelComponent;
+  private _popupElement: PopupContainerComponent;
   private _api: IPlayerApi = new ChromelessPlayerApi();
   private _handler: EventHandler = new EventHandler(this);
 
@@ -737,6 +739,7 @@ export class Player extends Component<IPlayerProps, {}> {
     const tooltipRef = (el: ChromeTooltip) => this._tooltipComponent = el;
     const actionRef = (el: HTMLElement) => this._actionElement = el;
     const bezelRef = (el: BezelComponent) => this._bezelElement = el;
+    const popupRef = (el: PopupContainerComponent) => this._popupElement = el;
 
     const onProgressHover = (time: number, percentage: number) => this._onProgressHover(time, percentage);
     const onProgressEndHover = () => this._onProgressEndHover();
@@ -784,6 +787,7 @@ export class Player extends Component<IPlayerProps, {}> {
           onClick={onCuedThumbnailClick}></CuedThumbnailComponent>
         <BufferComponent api={this.getApi()}></BufferComponent>
         <BezelComponent ref={bezelRef}></BezelComponent>
+        <PopupContainerComponent></PopupContainerComponent>
         <div
           ref={actionRef}
           class="html5-video-action"></div>

@@ -1,9 +1,9 @@
 import { Component } from "preact";
-import { PopupType } from "./Popup";
+import { PopupType } from "./PopupComponent";
 
 
 export interface IContentDescriptor {
-  name?: string;
+  name: string;
 }
 
 export interface IInfoContentDescriptor extends IContentDescriptor {
@@ -45,7 +45,6 @@ export interface IMenuItem {
 }
 
 export interface ISelectorContentDescriptor extends IContentDescriptor {
-  name: string;
   mode: SelectorMode;
   items: ISelectorItem[];
   selected: string[]; // array for if in toggle mode
