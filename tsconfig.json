@@ -10,9 +10,11 @@
     "jsxFactory": "h",
     "sourceMap": true,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "src/app/libs/definitions"
     ],
 
+    "allowSyntheticDefaultImports": true,
     "preserveConstEnums": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
