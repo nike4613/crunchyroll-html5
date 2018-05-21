@@ -3,7 +3,7 @@
 	left: 25px;
 	top: 25px;
 	right: 25px;
-	bottom: 25px;
+	//bottom: 25px;
 	background: #666;
 	box-shadow: 0 5px 50px #000;
 	text-align: center;
@@ -14,4 +14,26 @@
 
 @keyframes zoom {
 	from { opacity:0; transform:translateY(100%) scale(0); }
+}
+
+.options {
+  display: grid;
+
+  grid-template-columns: [opt-name button-start] 1fr [opt-value button-end] 1fr;
+  place-content: center;
+
+  & > span {
+    grid-column: opt-name;
+    justify-self: right;
+  }
+
+  & > input {
+    grid-column: opt-value;
+    justify-self: left;
+  }
+
+  & > input[type="submit"], & > button {
+    grid-column: button-start / button-end;
+    justify-self: center;
+  }
 }

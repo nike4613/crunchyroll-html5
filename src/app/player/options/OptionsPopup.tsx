@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
-import container from "../../../config/inversify.config";
 import { IStorageSymbol, IStorage } from '../../storage/IStorage';
 import Portal from '../../libs/Portal';
+import { WebExtensionMechanism } from '../../storage/mechanism/WebExtensionMechanism';
 
 export interface IOptionsPopupProps {
   isWebextension: boolean;
@@ -21,12 +21,23 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
     const open = () => this.setState({visible: true});
     const close = () => this.setState({visible: false});
 
+    let inBrowser = props.isWebextension;
+    
+    let syncing = false;
+    if (inBrowser) {
+      syncing = WebExtensionMechanism.sync;
+    }
+
     // Portal injects the children into the specified element
     return (
       this.state.visible ? (
-        <Portal into={document.querySelector("div#showmedia_video") as Element}>
+        <Portal into="div#showmedia_video">
           <div class="options popup" onClick={close}>
-            HALLO
+            { inBrowser ? (
+              [<span className="opt-name">Use browser.storage.sync</span>,  <input type="checkbox" checked={syncing}></input>]
+            ): null }
+            <span className="opt-name">NONOPT</span>  <input type="checkbox" checked={false}></input>
+            <button>BUTN</button>
           </div>
         </Portal>
       ) : null

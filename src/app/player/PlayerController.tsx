@@ -308,6 +308,8 @@ export class PlayerController {
       window['openPopup'] = () => 
         popup.open();
 
+    const isWebext = browser ? true : false; // check if browser exists
+
     render((
       <div>
         <Player
@@ -316,7 +318,7 @@ export class PlayerController {
           large={this.large}
           sizeEnabled={this.isSizeEnabled()}
           config={this._getDefaultConfig()}></Player>
-        <OptionsPopup isWebextension={false} ref={onPopupReady}></OptionsPopup>
+        <OptionsPopup isWebextension={isWebext} ref={onPopupReady}></OptionsPopup>
       </div>
     ), this._element);
   }
