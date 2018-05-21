@@ -6,6 +6,7 @@ import { setCrossHttpClient } from "./config";
 import container from "../config/inversify.config";
 import { IMechanism, IMechanismSymbol } from "./storage/mechanism/IMechanism";
 import { WebExtensionMechanism } from "./storage/mechanism/WebExtensionMechanism";
+import { IStorage, IStorageSymbol } from "./storage/IStorage";
 
 function getURL(path: string): string {
   if (chrome && chrome.extension && typeof chrome.extension.getURL === "function") {
@@ -55,4 +56,12 @@ fonts.push(trebuc, trebucbd, trebucbi, trebucit);
 
 container.bind<IMechanism>(IMechanismSymbol).to(WebExtensionMechanism);
 
-runBootstrap();
+(async function() { // anon one-time function to load and set sync settings
+  const mek = container.get<IMechanism>(IMechanismSymbol) as WebExtensionMechanism;
+
+  // ensure the mechanism knows what we're thinking
+  let shouldSync = await browser.storage.sync.get("sync") as boolean;
+  mek.sync = shouldSync;
+
+  runBootstrap();
+})();
