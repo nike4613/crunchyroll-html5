@@ -1,4 +1,4 @@
-import { h, render } from 'preact';
+import { h, render, options } from 'preact';
 import { Player, IPlayerConfig } from '../media/player/Player';
 import { getMediaByUrl, Formats, getMedia } from 'crunchyroll-lib/media';
 import { NextVideo } from '../media/nextvideo';
@@ -10,6 +10,7 @@ import { getCollectionCarouselDetail, getMediaMetadataFromDOM } from '../media/C
 import { getCollectionCarouselPage, ICollectionCarouselPage } from './crunchyroll';
 import container from "../../config/inversify.config";
 import { IStorageSymbol, IStorage } from '../storage/IStorage';
+import { OptionsPopup } from './options/OptionsPopup';
 
 export interface IPlayerControllerOptions {
   quality?: keyof Formats;
@@ -303,13 +304,20 @@ export class PlayerController {
     const onSizeChange = (large: boolean) => this._onSizeChange(large);
     const onPlayerReady = (player: Player) => this._onPlayerReady(player);
 
+    const onPopupReady = (popup: OptionsPopup) => 
+      window['openPopup'] = () => 
+        popup.open();
+
     render((
-      <Player
-        ref={onPlayerReady}
-        onSizeChange={onSizeChange}
-        large={this.large}
-        sizeEnabled={this.isSizeEnabled()}
-        config={this._getDefaultConfig()}></Player>
+      <div>
+        <Player
+          ref={onPlayerReady}
+          onSizeChange={onSizeChange}
+          large={this.large}
+          sizeEnabled={this.isSizeEnabled()}
+          config={this._getDefaultConfig()}></Player>
+        <OptionsPopup isWebextension={false} ref={onPopupReady}></OptionsPopup>
+      </div>
     ), this._element);
   }
 }
