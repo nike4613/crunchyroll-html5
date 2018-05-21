@@ -56,12 +56,11 @@ fonts.push(trebuc, trebucbd, trebucbi, trebucit);
 
 container.bind<IMechanism>(IMechanismSymbol).to(WebExtensionMechanism);
 
-(async function() { // anon one-time function to load and set sync settings
-  const mek = container.get<IMechanism>(IMechanismSymbol) as WebExtensionMechanism;
+(async function() { // anon one-time function to load and set sync setting
 
   // ensure the mechanism knows what we're thinking
-  let shouldSync = await browser.storage.sync.get("sync") as boolean;
-  mek.sync = shouldSync;
+  let shouldSync = (await browser.storage.sync.get("sync")).sync || false; // actually force boolean
+  WebExtensionMechanism.sync = shouldSync;
 
   runBootstrap();
 })();
