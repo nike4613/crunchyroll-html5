@@ -1,15 +1,63 @@
+.popup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+  bottom: 0px; 
+  z-index: 999999; // gotta be on top
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
+
+  & code {
+    font-family: monospace;
+  }
+
+  & span.spacer {
+    content: "";
+    width: 1em;
+    height: 1em;
+  }
+}
+
 .popup {
-	position: absolute;
-	left: 25px;
-	top: 25px;
-	right: 25px;
-	//bottom: 25px;
-	background: #666;
-	box-shadow: 0 5px 50px #000;
+  background: #fff;
+  color: #000;
+	box-shadow: 0 0 20px 0px #000;
 	text-align: center;
 	overflow: auto;
 	cursor: pointer;
-	animation: zoom .4s forwards ease 1;
+  animation: zoom .4s forwards ease 1;
+  
+  width: fit-content;
+  height: fit-content;
+  padding: 1em;
+
+  border-radius: 2px;
+
+  position: relative;
+
+  & > span.close-button {
+    position: absolute;
+    right: -9px;
+    top: 0px;
+    color: #888;
+    width: 1em;
+    height: 1em;
+    font-family: monospace;
+    font-weight: bolder;
+    font-size: 14px;
+
+    &::before{
+      content: "x";
+    }
+  }
 }
 
 @keyframes zoom {
@@ -19,10 +67,12 @@
 .options {
   display: grid;
 
-  grid-template-columns: [opt-name button-start] 1fr [opt-value button-end] 1fr;
+  grid-template-columns: [opt-name button-start] 5fr [opt-value] 1fr [button-end];
   place-content: center;
 
-  & > span {
+  gap: 5px 5px;
+
+  & > span:not(.close-button) {
     grid-column: opt-name;
     justify-self: right;
   }
@@ -32,7 +82,7 @@
     justify-self: left;
   }
 
-  & > input[type="submit"], & > button {
+  & > *, & > input[type="submit"] {
     grid-column: button-start / button-end;
     justify-self: center;
   }
