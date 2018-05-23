@@ -2,6 +2,8 @@ import * as parseUrl from 'url-parse';
 import { IStorageSymbol, IStorage } from '../storage/IStorage';
 import container from "../../config/inversify.config";
 import "../libs/polyfill/DOMTokenList";
+import GlobalConfig from "../config";
+import { WebExtensionMechanism } from '../storage/mechanism/WebExtensionMechanism';
 
 export function getMediaId(url: string): number|undefined {
   // https://www.crunchyroll.com/boruto-naruto-next-generations/episode-17-run-sarada-740239
@@ -67,7 +69,14 @@ export async function updateQualitySettings(): Promise<void> {
   // get and check saved quality
   let savedQuality: string|undefined = await storage.get<string>("resolution");
   if (savedQuality === undefined || (qualityOverride !== undefined && qualityOverride !== savedQuality)) {
+    if (!GlobalConfig.syncResolution) 
+      WebExtensionMechanism.tempSync(false); // temporarily disable sync reading
+
     storage.set<string>("resolution", qualityOverride !== undefined ? qualityOverride : quality);
+
+    if (!GlobalConfig.syncResolution) 
+      WebExtensionMechanism.tempSync() // restore sync state after call
+
     savedQuality = qualityOverride;
   }
   qualityOverride = savedQuality;

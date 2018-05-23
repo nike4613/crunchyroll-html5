@@ -9,14 +9,28 @@ export class WebExtensionMechanism implements IMechanism {
    * BEGIN code to allow optional sync
    */
   private static _sync: boolean = false;
+  private static _untempsync: boolean = false;
+
+  static get active(): boolean {
+    return browser ? true : false; // force boolean
+  }
 
   static get sync(): boolean {
-    return this._sync;
+    return this.active && this._sync;
   }
 
   static set sync(val: boolean) {
     this._sync = val;
     browser.storage.sync.set({"sync": val}); // no need to wait for it
+  }
+
+  static tempSync(val: boolean|null = null) {
+    if (val === null) { // reset
+      this._sync = this._untempsync;
+    } else {
+      this._untempsync = this._sync;
+      this._sync = val!;
+    }
   }
 
   static get storage(): browser.storage.StorageArea {
