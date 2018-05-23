@@ -80,10 +80,32 @@
   & > input {
     grid-column: opt-value;
     justify-self: left;
+
+    transition: all .25s;
+    &:disabled {
+      transition: all .25s;
+    }
   }
 
   & > *, & > input[type="submit"] {
     grid-column: button-start / button-end;
     justify-self: center;
+  }
+
+  & > div.no-options-avaliable {
+    color: #888;
+
+    &::before {
+      content: "No options avaliable at this time.";
+    }
+  }
+
+  & > .disableable {
+    transition: color .25s;
+
+    &.disabled { 
+      color: #888;
+      transition: color .25s;
+    }
   }
 }
