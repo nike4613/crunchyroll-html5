@@ -11,6 +11,7 @@ import { getCollectionCarouselPage, ICollectionCarouselPage } from './crunchyrol
 import container from "../../config/inversify.config";
 import { IStorageSymbol, IStorage } from '../storage/IStorage';
 import { OptionsPopup } from './options/OptionsPopup';
+import { WebExtensionMechanism } from '../storage/mechanism/WebExtensionMechanism';
 
 export interface IPlayerControllerOptions {
   quality?: keyof Formats;
@@ -308,8 +309,6 @@ export class PlayerController {
       window['openPopup'] = () => 
         popup.open();
 
-    const isWebext = browser ? true : false; // check if browser exists
-
     render((
       <div>
         <Player
@@ -318,7 +317,7 @@ export class PlayerController {
           large={this.large}
           sizeEnabled={this.isSizeEnabled()}
           config={this._getDefaultConfig()}></Player>
-        <OptionsPopup isWebextension={isWebext} ref={onPopupReady}></OptionsPopup>
+        <OptionsPopup ref={onPopupReady}></OptionsPopup>
       </div>
     ), this._element);
   }
