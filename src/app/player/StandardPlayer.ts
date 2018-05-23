@@ -66,20 +66,20 @@ export async function updateQualitySettings(): Promise<void> {
   }
   
   const storage = container.get<IStorage>(IStorageSymbol);
+
+  WebExtensionMechanism.tempSync(GlobalConfig.syncResolution); // temporarily disable sync reading if not syncing resolution
+  
   // get and check saved quality
   let savedQuality: string|undefined = await storage.get<string>("resolution");
   if (savedQuality === undefined || (qualityOverride !== undefined && qualityOverride !== savedQuality)) {
-    if (!GlobalConfig.syncResolution) 
-      WebExtensionMechanism.tempSync(false); // temporarily disable sync reading
 
     storage.set<string>("resolution", qualityOverride !== undefined ? qualityOverride : quality);
-
-    if (!GlobalConfig.syncResolution) 
-      WebExtensionMechanism.tempSync() // restore sync state after call
 
     savedQuality = qualityOverride;
   }
   qualityOverride = savedQuality;
+
+  WebExtensionMechanism.tempSync() // restore sync state after calls
   
   // always go with the override if defined
   if (qualityOverride !== undefined)
