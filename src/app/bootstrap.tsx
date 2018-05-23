@@ -8,6 +8,7 @@ import container from 'crunchyroll-lib/config';
 import { bindCrossHttpClientAsDefault } from './config';
 import { ReadyStateChange, ReadyStateChangeEvent, ReadyState } from './libs/ReadyStateChange';
 import { EventHandler } from './libs/events/EventHandler';
+import GlobalConfig from "./config";
 
 const css = require('../styles/bootstrap.scss');
 
@@ -17,6 +18,10 @@ let timer: number|undefined;
 const readyStateChange = new ReadyStateChange(document);
 readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
   switch (e.readyState) {
+    case ReadyState.Loading:
+      GlobalConfig.load(); // load config from storage
+
+      break;
     case ReadyState.Interactive:
       _runOnInteractive();
 

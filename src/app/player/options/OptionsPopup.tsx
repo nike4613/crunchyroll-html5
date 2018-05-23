@@ -3,9 +3,10 @@ import { IStorageSymbol, IStorage } from '../../storage/IStorage';
 import Portal from '../../libs/Portal';
 import { WebExtensionMechanism } from '../../storage/mechanism/WebExtensionMechanism';
 import { updateQualitySettings } from '../StandardPlayer';
+import GlobalConfig from "../../config";
 
 export interface IOptionsPopupProps {
-  isWebextension: boolean;
+  //isWebextension: boolean;
 }
 
 export interface IOptionsPopupState {
@@ -15,6 +16,8 @@ export interface IOptionsPopupState {
 export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupState> {
 
   private _syncCheckbox: HTMLInputElement;
+  private _resolutionSyncCheckbox: HTMLInputElement;
+  private _resolutionSyncLabel: HTMLSpanElement;
 
   open() {
     this.setState({visible: true});
@@ -24,7 +27,7 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
     const open = () => this.setState({visible: true});
     const close = () => this.setState({visible: false});
 
-    let webext = props.isWebextension;
+    const webext = WebExtensionMechanism.active;
     
     let syncing = false;
     if (webext) {
@@ -32,12 +35,23 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
     }
 
     const synccheck = (cb: HTMLInputElement) => this._syncCheckbox = cb;
+    const ressynccheck = (cb: HTMLInputElement) => this._resolutionSyncCheckbox = cb;
+    const ressynclabel = (lbl: HTMLSpanElement) => this._resolutionSyncLabel = lbl;
+
+    const updateSyncOpts = () => {
+      this._resolutionSyncCheckbox.disabled = !this._syncCheckbox.checked;
+      this._resolutionSyncLabel.classList.toggle("disabled");
+    };
 
     const save = () => {
+      GlobalConfig.syncResolution = this._resolutionSyncCheckbox.checked; // update global
+
       if (webext) {
         WebExtensionMechanism.sync = this._syncCheckbox.checked;
         updateQualitySettings(); // this saves quality to storage; that's whats important
       }
+
+      GlobalConfig.save(); // save global config
     };
 
     // Portal injects the children into the specified element
@@ -49,8 +63,10 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
               <span className="close-button" onClick={close}></span>
 
               { webext ? (
-                [<span className="opt-name">Use <code>browser.storage.sync</code></span>,  <input type="checkbox" checked={syncing} ref={synccheck}></input>]
-              ): null }
+                [<span>Use <code>browser.storage.sync</code></span>, <input type="checkbox" checked={syncing} ref={synccheck} onChange={updateSyncOpts}></input>,
+                 <span className={"disableable" + (syncing ? "" : " disabled")} ref={ressynclabel}>Sync resolution prefrences across devices</span>, <input type="checkbox" checked={GlobalConfig.syncResolution} ref={ressynccheck}></input>]
+              ): <div className="no-options-avaliable"></div> }
+
               <div><button onClick={save}>Save</button><span className="spacer"></span><button onClick={close}>Cancel</button></div>
             </div>
           </div>
