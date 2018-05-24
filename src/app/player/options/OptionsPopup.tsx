@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { IStorageSymbol, IStorage } from '../../storage/IStorage';
 import Portal from '../../libs/Portal';
 import { WebExtensionMechanism } from '../../storage/mechanism/WebExtensionMechanism';
-import { updateQualitySettings } from '../StandardPlayer';
+import { saveSelectedQuality } from '../StandardPlayer';
 import GlobalConfig from "../../config";
 
 export interface IOptionsPopupProps {
@@ -48,7 +48,7 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
 
       if (webext) {
         WebExtensionMechanism.sync = this._syncCheckbox.checked;
-        updateQualitySettings(); // this saves quality to storage; that's whats important
+        saveSelectedQuality(); // this saves quality to storage; that's whats important
       }
 
       GlobalConfig.save(); // save global config

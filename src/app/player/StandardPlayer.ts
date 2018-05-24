@@ -99,6 +99,13 @@ export async function updateQualitySettings(): Promise<void> {
   storedQuality = quality;
 }
 
+export function saveSelectedQuality() {
+  const storage = container.get<IStorage>(IStorageSymbol);
+  WebExtensionMechanism.tempSync(GlobalConfig.syncResolution); // temporarily disable sync reading if not syncing resolution
+  storage.set<string>("resolution", storedQuality);
+  WebExtensionMechanism.tempSync() // restore sync state after calls
+}
+
 export function getSelectedQuality(): string|undefined {
   if (storedQuality === "") 
     throw "Quality must be updated first!";
