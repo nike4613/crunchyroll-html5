@@ -56,6 +56,8 @@ fonts.push(trebuc, trebucbd, trebucbi, trebucit);
 
 container.bind<IMechanism>(IMechanismSymbol).to(WebExtensionMechanism);
 
+WebExtensionMechanism.active = true;
+
 (async function() { // anon one-time function to load and set sync setting
 
   // ensure the mechanism knows what we're thinking

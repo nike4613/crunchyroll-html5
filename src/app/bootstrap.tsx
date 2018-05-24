@@ -9,6 +9,7 @@ import { bindCrossHttpClientAsDefault } from './config';
 import { ReadyStateChange, ReadyStateChangeEvent, ReadyState } from './libs/ReadyStateChange';
 import { EventHandler } from './libs/events/EventHandler';
 import GlobalConfig from "./config";
+import { WebExtensionMechanism } from './storage/mechanism/WebExtensionMechanism';
 
 const css = require('../styles/bootstrap.scss');
 
@@ -34,6 +35,8 @@ readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
 }, false);
 
 export function runBootstrap() {
+  WebExtensionMechanism.disableActiveWrite();
+
   // Update ready state change
   readyStateChange.tick();
 

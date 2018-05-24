@@ -10,9 +10,21 @@ export class WebExtensionMechanism implements IMechanism {
    */
   private static _sync: boolean = false;
   private static _untempsync: boolean = false;
+  private static _isActive: boolean = false;
+  private static _canModifyActive: boolean = true;
+
+  static set active(val: boolean) {
+    if (!this._canModifyActive)
+      throw "Trying to modify WebExtensionMechanism active state after it has been disabled!";
+    this._isActive = val;
+  }
+
+  static disableActiveWrite(): void {
+    this._canModifyActive = false;
+  }
 
   static get active(): boolean {
-    return browser ? true : false; // force boolean
+    return this._isActive;
   }
 
   static get sync(): boolean {
