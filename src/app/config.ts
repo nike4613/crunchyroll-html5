@@ -51,7 +51,7 @@ class GlobalSettingsImpl implements IGlobalSettings {
     this.syncResolution = settings!.sync_res;
 
     await this.save(); // ensure if we loaded defaults they get saved; also updates syncResolution based on 
-                       // sync option\
+                       // sync option
   }
   async save(): Promise<void> {
     const storage = container.get<IStorage>(IStorageSymbol);
