@@ -50,7 +50,7 @@ export async function updateQualitySettings(): Promise<void> {
     const token = fmtElements[i].getAttribute("token");
     if (!token) continue;
 
-    quality = token.match(/^showmedia\.(\d{2,3}0p)$/)![1]; // regex match, first capture (2-3 digits followed by 0p)
+    quality = parseToken(token);
   }
   
   // get the quality from the URL
@@ -90,6 +90,16 @@ export async function updateQualitySettings(): Promise<void> {
     }
     
     storedQuality = quality;
+  } else if (selectedQualityElement) {
+    var token = selectedQualityElement.getAttribute("token");
+
+    if (token) {
+      storedQuality = parseToken(token);
+    } else {
+      storedQuality = "360p";
+    }
+  } else {
+    storedQuality = "360p";
   }
 }
 
@@ -98,4 +108,12 @@ export function getSelectedQuality(): string|undefined {
     throw new Error("Quality must be updated first!");
   
   return storedQuality;
+}
+
+function parseToken(token: string) {
+  // regex match, first capture (2-3 digits followed by 0p)
+  const m = token.match(/^showmedia\.(\d{2,3}0p)$/);
+  if (!m) throw new Error("Unable to parse token.");
+
+  return m[1];
 }
