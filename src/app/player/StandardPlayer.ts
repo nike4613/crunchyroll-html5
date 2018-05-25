@@ -77,22 +77,25 @@ export async function updateQualitySettings(): Promise<void> {
     quality = qualityOverride;
   
   // update quality selector buttons
-  let cselEl = document.querySelector("a.selected[token^=showmedia\\.]")!;
-  let targetEl = document.querySelector("a[token^=showmedia\\." + quality + "]")!;
-  
-  if (cselEl != targetEl) {
-    cselEl.classList.replace('dark-button','default-button');
-    cselEl.classList.remove('selected');
-    targetEl.classList.replace('default-button','dark-button');
-    targetEl.classList.add('selected');
+  let selectedQualityElement = document.querySelector("a.selected[token^=showmedia\\.]");
+  let targetQualityElement = document.querySelector("a[token^=showmedia\\." + quality + "]");
+
+  if (selectedQualityElement && targetQualityElement) {
+    if (selectedQualityElement !== targetQualityElement) {
+      selectedQualityElement.classList.replace('dark-button','default-button');
+      selectedQualityElement.classList.remove('selected');
+
+      targetQualityElement.classList.replace('default-button','dark-button');
+      targetQualityElement.classList.add('selected');
+    }
+    
+    storedQuality = quality;
   }
-  
-  storedQuality = quality;
 }
 
 export function getSelectedQuality(): string|undefined {
   if (storedQuality === "") 
-    throw "Quality must be updated first!";
+    throw new Error("Quality must be updated first!");
   
   return storedQuality;
 }
