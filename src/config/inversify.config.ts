@@ -1,5 +1,5 @@
-import { Container, injectable, decorate } from "inversify";
 import "reflect-metadata";
+import { Container, injectable, decorate } from "inversify";
 import { JsonStorage } from "../app/storage/JsonStorage";
 import { IStorageSymbol, IStorage } from "../app/storage/IStorage";
 import { IMechanism, IMechanismSymbol } from "../app/storage/mechanism/IMechanism";
