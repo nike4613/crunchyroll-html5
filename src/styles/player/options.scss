@@ -79,13 +79,16 @@
   display: grid;
   grid-template-columns: [opt-name button-start] 2fr [opt-value] 1fr [button-end];
   place-content: center;
+
   gap: 5px 5px;
+  grid-gap: 5px 5px; // nonstandard name
 
   & .subgrid { // workaround until display:subgrid becomes supported
     display: grid;
     grid-template-columns: inherit;
     place-content: inherit;
     gap: inherit;
+    grid-gap: inherit;
 
     width: 100%;
   }
