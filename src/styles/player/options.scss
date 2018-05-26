@@ -22,10 +22,7 @@
   & span.spacer {
     width: 1em;
     height: 1em;
-
-    &::before {
-      content: " ";
-    }
+    display: inline-block;
   }
 }
 
