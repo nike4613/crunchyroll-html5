@@ -4,7 +4,7 @@ import Portal from '../../libs/Portal';
 import { WebExtensionMechanism } from '../../storage/mechanism/WebExtensionMechanism';
 import { saveSelectedQuality } from '../StandardPlayer';
 import GlobalConfig from "../../config";
-import { CheckboxField } from './OptionField';
+import { CheckboxField, ChildField } from './OptionField';
 
 export interface IOptionsPopupProps {
   //isWebextension: boolean;
@@ -65,7 +65,7 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
                   <CheckboxField checked={syncing} ref={synccheck} onChange={updateSyncOpts}>
                     Use <code>browser.storage.sync</code>
                   </CheckboxField>,
-                  <CheckboxField checked={GlobalConfig.syncResolution} disableable={true} disabled={!syncing} ref={ressynccheck}>
+                  <CheckboxField checked={GlobalConfig.syncResolution} disableable disabled={!syncing} ref={ressynccheck}>
                     Sync resolution prefrences across devices
                   </CheckboxField>]
               ): <div class="no-options-avaliable"></div> }

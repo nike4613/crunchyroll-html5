@@ -1,4 +1,5 @@
 import { h, Component, ComponentProps } from 'preact';
+import { POINT_CONVERSION_UNCOMPRESSED } from 'constants';
 
 export interface IOptionFieldProps {
   label?: string; // if null, uses children
@@ -15,7 +16,7 @@ export abstract class OptionField<PropType extends IOptionFieldProps, StateType 
 
   private _label: HTMLSpanElement;
 
-  abstract getInput(props: PropType, disabled?: boolean): JSX.Element;
+  abstract getInput(props: PropType&ComponentProps<this>, disabled?: boolean): JSX.Element | null;
 
   constructor() {
     super();
@@ -47,7 +48,8 @@ export abstract class OptionField<PropType extends IOptionFieldProps, StateType 
     const label = props.label || props.children;
     const labelClass = props.disableable ? "disableable" + (disabled ? " disabled" : "") : ""; 
 
-    const input = this.getInput(props, disabled);
+    const input = this.getInput(props, disabled)!;
+    if (!input.attributes) input.attributes = {}; // ensure that this exists
     subInputRef = input.attributes['ref'] || subInputRef;
     input.attributes['ref'] = refInput;
 
@@ -71,9 +73,12 @@ export abstract class OptionField<PropType extends IOptionFieldProps, StateType 
 
 }
 
-export interface ICheckboxFieldProps extends IOptionFieldProps {
-  checked?: boolean;
+export interface IInputFieldProps extends IOptionFieldProps {
   onChange?: (evt: Event) => void;
+}
+
+export interface ICheckboxFieldProps extends IInputFieldProps {
+  checked?: boolean;
 }
 
 export interface ICheckboxFieldState extends IOptionFieldState {
@@ -117,4 +122,18 @@ export class CheckboxField extends OptionField<ICheckboxFieldProps, ICheckboxFie
     });
   }
 
+}
+
+export interface IChildFieldProps extends IOptionFieldProps {
+
+}
+
+export interface IChildFieldState extends IOptionFieldState {
+
+}
+
+export class ChildField extends OptionField<IChildFieldProps, IChildFieldState> {
+  getInput(props: IChildFieldProps&ComponentProps<this>, disabled?: boolean | undefined): JSX.Element | null {
+    return props.children![0];
+  }
 }
