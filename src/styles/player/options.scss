@@ -20,9 +20,12 @@
   }
 
   & span.spacer {
-    content: "";
     width: 1em;
     height: 1em;
+
+    &::before {
+      content: " ";
+    }
   }
 }
 
@@ -64,6 +67,17 @@
 	from { opacity:0; transform:translateY(100%) scale(0); }
 }
 
+@mixin grid-selector($selectors) {
+  $selector: ();
+  @each $value in $selectors {
+    $sel: unquote("& > #{$value}, & .subgrid > #{$value}");
+    $selector: append($selector, $sel, comma);
+  }
+  #{$selector} {
+    @content
+  }
+}
+
 .options {
   display: grid;
   grid-template-columns: [opt-name button-start] 5fr [opt-value] 1fr [button-end];
@@ -79,12 +93,11 @@
     width: 100%;
   }
 
-  & > span:not(.close-button), & .subgrid > span:not(.close-button) {
+  @include grid-selector( 'span:not(.close-button)' ) {
     grid-column: opt-name;
     justify-self: right;
   }
-
-  & > input, & .subgrid > input {
+  @include grid-selector( 'input' 'select' ) {
     grid-column: opt-value;
     justify-self: left;
 
@@ -93,8 +106,7 @@
       transition: all .25s;
     }
   }
-
-  & > *, & .subgrid > *, & > input[type="submit"], & .subgrid > input[type="submit"] {
+  @include grid-selector( '*' 'input[type="submit"]' ) {
     grid-column: button-start / button-end;
     justify-self: center;
   }
