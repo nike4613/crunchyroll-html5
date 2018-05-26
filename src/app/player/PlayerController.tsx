@@ -10,7 +10,6 @@ import { getCollectionCarouselDetail, getMediaMetadataFromDOM } from '../media/C
 import { getCollectionCarouselPage, ICollectionCarouselPage } from './crunchyroll';
 import container from "../../config/inversify.config";
 import { IStorageSymbol, IStorage } from '../storage/IStorage';
-import { OptionsPopup } from './options/OptionsPopup';
 import { WebExtensionMechanism } from '../storage/mechanism/WebExtensionMechanism';
 
 export interface IPlayerControllerOptions {
@@ -305,10 +304,6 @@ export class PlayerController {
     const onSizeChange = (large: boolean) => this._onSizeChange(large);
     const onPlayerReady = (player: Player) => this._onPlayerReady(player);
 
-    const onPopupReady = (popup: OptionsPopup) => 
-      window['openPopup'] = () => 
-        popup.open();
-
     render((
       <div>
         <Player
@@ -317,7 +312,6 @@ export class PlayerController {
           large={this.large}
           sizeEnabled={this.isSizeEnabled()}
           config={this._getDefaultConfig()}></Player>
-        <OptionsPopup ref={onPopupReady}></OptionsPopup>
       </div>
     ), this._element);
   }
