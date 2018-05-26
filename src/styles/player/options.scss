@@ -66,18 +66,25 @@
 
 .options {
   display: grid;
-
   grid-template-columns: [opt-name button-start] 5fr [opt-value] 1fr [button-end];
   place-content: center;
-
   gap: 5px 5px;
 
-  & > span:not(.close-button) {
+  & .subgrid { // workaround until display:subgrid becomes supported
+    display: grid;
+    grid-template-columns: inherit;
+    place-content: inherit;
+    gap: inherit;
+
+    width: 100%;
+  }
+
+  & > span:not(.close-button), & .subgrid > span:not(.close-button) {
     grid-column: opt-name;
     justify-self: right;
   }
 
-  & > input {
+  & > input, & .subgrid > input {
     grid-column: opt-value;
     justify-self: left;
 
@@ -87,7 +94,7 @@
     }
   }
 
-  & > *, & > input[type="submit"] {
+  & > *, & .subgrid > *, & > input[type="submit"], & .subgrid > input[type="submit"] {
     grid-column: button-start / button-end;
     justify-self: center;
   }
@@ -100,7 +107,7 @@
     }
   }
 
-  & > .disableable {
+  & .disableable {
     transition: color .25s;
 
     &.disabled { 
