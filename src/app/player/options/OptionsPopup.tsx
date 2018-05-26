@@ -8,6 +8,8 @@ import { CheckboxField, ChildField } from './OptionField';
 
 export interface IOptionsPopupProps {
   //isWebextension: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
 }
 
 export interface IOptionsPopupState {
@@ -23,9 +25,21 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
     this.setState({visible: true});
   }
 
+  close() {
+    this.setState({visible: false});
+  }
+
+  componentDidUpdate(oldProps: IOptionsPopupProps, oldState: IOptionsPopupState) {
+    if (!this.state.visible && oldState.visible) // was open, now isn't
+      if (this.props.onClose)
+        this.props.onClose();
+    if (this.state.visible && !oldState.visible) // wasn't open, now is
+      if (this.props.onOpen)
+        this.props.onOpen();
+  }
+
   render(props: IOptionsPopupProps) {
-    const open = () => this.setState({visible: true});
-    const close = () => this.setState({visible: false});
+    const close = this.close.bind(this);
 
     const webext = WebExtensionMechanism.active;
     
@@ -76,5 +90,9 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
         </Portal>
       ) : null
     );
+  }
+
+  get visible(): boolean {
+    return this.state.visible;
   }
 }

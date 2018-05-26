@@ -1,0 +1,23 @@
+@keyframes settings-spin {
+  from {
+    transform: rotateZ(0deg);
+  }
+  25% {
+    transform: rotateZ(90deg);
+  }
+  50% {
+    transform: rotateZ(180deg);
+  }
+  75% {
+    transform: rotateZ(270deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+.chrome-button.chrome-settings-button svg {
+  &.chrome-button-settings-spinning {
+    animation: 2s linear 0s infinite normal settings-spin
+  }
+}
