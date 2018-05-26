@@ -22,6 +22,11 @@ const generateManifest = () => {
       '96': 'assets/icon96.png',
       '128': 'assets/icon128.png'
     },
+    "applications": { // for a non-temporary ID in firefox
+      "gecko": {
+        "id": package.name + "@yeppha.github.io"
+      }
+    },
     'background': {
       'scripts': [
         'vendor/browser-polyfill.min.js',
