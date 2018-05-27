@@ -1,9 +1,8 @@
 import { h, Component } from 'preact';
 import { IStorageSymbol, IStorage } from '../../storage/IStorage';
 import Portal from '../../libs/Portal';
-import { WebExtensionMechanism } from '../../storage/mechanism/WebExtensionMechanism';
 import { saveSelectedQuality } from '../StandardPlayer';
-import GlobalConfig from "../../config";
+import GlobalConfig, { SyncConfig } from "../../config";
 import { CheckboxField, ChildField } from './OptionField';
 
 export interface IOptionsPopupProps {
@@ -41,11 +40,11 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
   render(props: IOptionsPopupProps) {
     const close = this.close.bind(this);
 
-    const webext = WebExtensionMechanism.active;
+    const webext = SyncConfig.isExtension;
     
     let syncing = false;
     if (webext) {
-      syncing = WebExtensionMechanism.sync;
+      syncing = SyncConfig.sync;
     }
 
     const synccheck = (cb: CheckboxField) => this._syncCheckbox = cb;
@@ -59,7 +58,7 @@ export class OptionsPopup extends Component<IOptionsPopupProps, IOptionsPopupSta
       GlobalConfig.syncResolution = this._resolutionSyncCheckbox.checked; // update global
 
       if (webext) {
-        WebExtensionMechanism.sync = this._syncCheckbox.checked;
+        SyncConfig.sync = this._syncCheckbox.checked;
         saveSelectedQuality(); // this saves quality to storage; that's whats important
       }
 

@@ -10,7 +10,6 @@ import { getCollectionCarouselDetail, getMediaMetadataFromDOM } from '../media/C
 import { getCollectionCarouselPage, ICollectionCarouselPage } from './crunchyroll';
 import container from "../../config/inversify.config";
 import { IStorageSymbol, IStorage } from '../storage/IStorage';
-import { WebExtensionMechanism } from '../storage/mechanism/WebExtensionMechanism';
 
 export interface IPlayerControllerOptions {
   quality?: keyof Formats;

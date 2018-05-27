@@ -2,8 +2,7 @@ import * as parseUrl from 'url-parse';
 import { IStorageSymbol, IStorage } from '../storage/IStorage';
 import container from "../../config/inversify.config";
 import "../libs/polyfill/DOMTokenList";
-import GlobalConfig from "../config";
-import { WebExtensionMechanism } from '../storage/mechanism/WebExtensionMechanism';
+import GlobalConfig, { SyncConfig } from "../config";
 
 export function getMediaId(url: string): number|undefined {
   // https://www.crunchyroll.com/boruto-naruto-next-generations/episode-17-run-sarada-740239
@@ -67,7 +66,7 @@ export async function updateQualitySettings(): Promise<void> {
   
   const storage = container.get<IStorage>(IStorageSymbol);
 
-  WebExtensionMechanism.tempSync(GlobalConfig.syncResolution); // temporarily disable sync reading if not syncing resolution
+  SyncConfig.tempSync(GlobalConfig.syncResolution); // temporarily disable sync reading if not syncing resolution
   
   // get and check saved quality
   let savedQuality: string|undefined = await storage.get<string>("resolution");
@@ -79,7 +78,7 @@ export async function updateQualitySettings(): Promise<void> {
   }
   qualityOverride = savedQuality;
 
-  WebExtensionMechanism.tempSync() // restore sync state after calls
+  SyncConfig.tempSync() // restore sync state after calls
   
   // always go with the override if defined
   if (qualityOverride !== undefined)
@@ -101,9 +100,9 @@ export async function updateQualitySettings(): Promise<void> {
 
 export function saveSelectedQuality() {
   const storage = container.get<IStorage>(IStorageSymbol);
-  WebExtensionMechanism.tempSync(GlobalConfig.syncResolution); // temporarily disable sync reading if not syncing resolution
+  SyncConfig.tempSync(GlobalConfig.syncResolution); // temporarily disable sync reading if not syncing resolution
   storage.set<string>("resolution", storedQuality);
-  WebExtensionMechanism.tempSync() // restore sync state after calls
+  SyncConfig.tempSync() // restore sync state after calls
 }
 
 export function getSelectedQuality(): string|undefined {

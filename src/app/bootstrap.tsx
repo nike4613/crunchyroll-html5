@@ -5,11 +5,10 @@ import { getMediaId, getSelectedQuality, getStartTime, getAutoPlay, updateQualit
 import { parseUrlFragments } from './player/AffiliatePlayer';
 import { Formats, FORMAT_IDS } from 'crunchyroll-lib/media';
 import container from 'crunchyroll-lib/config';
-import { bindCrossHttpClientAsDefault } from './config';
+import { bindCrossHttpClientAsDefault, SyncConfig } from './config';
 import { ReadyStateChange, ReadyStateChangeEvent, ReadyState } from './libs/ReadyStateChange';
 import { EventHandler } from './libs/events/EventHandler';
 import GlobalConfig from "./config";
-import { WebExtensionMechanism } from './storage/mechanism/WebExtensionMechanism';
 
 const css = require('../styles/bootstrap.scss');
 
@@ -35,7 +34,7 @@ readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
 }, false);
 
 export function runBootstrap() {
-  WebExtensionMechanism.disableActiveWrite();
+  SyncConfig.disableIsExtensionWrite();
 
   // Update ready state change
   readyStateChange.tick();

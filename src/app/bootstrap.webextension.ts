@@ -3,7 +3,7 @@ import { binaryToBlob } from "./utils/blob";
 import { addFile, setWorkerUrl, fonts } from "./SubtitleEngineLoader";
 import { runBootstrap } from './bootstrap';
 import { BackgroundHttpClient } from "./http/BackgroundHttpClient";
-import { setCrossHttpClient } from "./config";
+import { setCrossHttpClient, SyncConfig } from "./config";
 import { IMechanism, IMechanismSymbol } from "./storage/mechanism/IMechanism";
 import { WebExtensionMechanism } from "./storage/mechanism/WebExtensionMechanism";
 import { IStorage, IStorageSymbol } from "./storage/IStorage";
@@ -56,16 +56,16 @@ fonts.push(trebuc, trebucbd, trebucbi, trebucit);
 
 container.bind<IMechanism>(IMechanismSymbol).to(WebExtensionMechanism);
 
-WebExtensionMechanism.active = true;
+SyncConfig.isExtension = true;
 
 (async function() { // anon one-time function to load and set sync setting
 
   // ensure the mechanism knows what we're thinking
   try {
     let shouldSync = (await browser.storage.sync.get("sync")).sync || false; // actually force boolean
-    WebExtensionMechanism.sync = shouldSync;
+    SyncConfig.sync = shouldSync;
   } catch {
-    WebExtensionMechanism.sync = false; // if this errors in any way, don't sync
+    SyncConfig.sync = false; // if this errors in any way, don't sync
   }
 
   runBootstrap();
