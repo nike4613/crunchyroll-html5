@@ -2,11 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-	position: fixed;
-	left: 0px;
-	top: 0px;
-	right: 0px;
+  
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  right: 0px;
   bottom: 0px; 
   z-index: 999999; // gotta be on top
   pointer-events: none;
@@ -29,10 +29,10 @@
 .popup {
   background: #fff;
   color: #000;
-	box-shadow: 0 0 20px 0px #000;
-	text-align: center;
-	overflow: auto;
-	cursor: pointer;
+  box-shadow: 0 0 20px 0px #000;
+  text-align: center;
+  overflow: auto;
+  cursor: pointer;
   animation: zoom .4s forwards ease 1;
   
   width: fit-content;
@@ -61,7 +61,7 @@
 }
 
 @keyframes zoom {
-	from { opacity:0; transform:translateY(100%) scale(0); }
+  from { opacity:0; transform:translateY(100%) scale(0); }
 }
 
 @mixin grid-selector($selectors) {
