@@ -304,14 +304,12 @@ export class PlayerController {
     const onPlayerReady = (player: Player) => this._onPlayerReady(player);
 
     render((
-      <div>
-        <Player
-          ref={onPlayerReady}
-          onSizeChange={onSizeChange}
-          large={this.large}
-          sizeEnabled={this.isSizeEnabled()}
-          config={this._getDefaultConfig()}></Player>
-      </div>
+      <Player
+        ref={onPlayerReady}
+        onSizeChange={onSizeChange}
+        large={this.large}
+        sizeEnabled={this.isSizeEnabled()}
+        config={this._getDefaultConfig()}></Player>
     ), this._element);
   }
 }
