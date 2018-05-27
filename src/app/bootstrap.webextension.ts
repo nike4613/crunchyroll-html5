@@ -3,10 +3,11 @@ import { binaryToBlob } from "./utils/blob";
 import { addFile, setWorkerUrl, fonts } from "./SubtitleEngineLoader";
 import { runBootstrap } from './bootstrap';
 import { BackgroundHttpClient } from "./http/BackgroundHttpClient";
-import { setCrossHttpClient, SyncConfig } from "./config";
+import { setCrossHttpClient, setXMLHttpRequestFactory, SyncConfig } from "./config";
 import { IMechanism, IMechanismSymbol } from "./storage/mechanism/IMechanism";
 import { WebExtensionMechanism } from "./storage/mechanism/WebExtensionMechanism";
 import { IStorage, IStorageSymbol } from "./storage/IStorage";
+import { XMLHttpRequestFactory } from "./http/XMLHttpRequestFactory";
 
 function getURL(path: string): string {
   if (chrome && chrome.extension && typeof chrome.extension.getURL === "function") {
@@ -19,6 +20,7 @@ function getURL(path: string): string {
 }
 
 setCrossHttpClient(BackgroundHttpClient);
+setXMLHttpRequestFactory(XMLHttpRequestFactory)
 
 const workerUrl = getURL('/vendor/JavascriptSubtitlesOctopus/subtitles-octopus-worker.js');
 const defaultFile = getURL('/vendor/JavascriptSubtitlesOctopus/default.ttf');

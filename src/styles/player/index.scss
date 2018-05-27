@@ -3,6 +3,7 @@
 @import "./cued-thumbnail";
 @import "./gradient";
 @import "./options";
+@import "../theme";
 
 #content > .html5-video-player {
   width: 100%;
@@ -10,6 +11,10 @@
 }
 
 .html5-video-player {
+  @each $name, $value in $theme {
+    --#{$name}: #{$value};
+  }
+
   position: relative;
   width: 640px;
   height: 360px;

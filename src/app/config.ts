@@ -3,6 +3,7 @@ import { ContainerConstructor } from "crunchyroll-lib/utils/container";
 import ccontainer from 'crunchyroll-lib/config';
 import container from "../config/inversify.config";
 import { IStorage, IStorageSymbol } from "./storage/IStorage";
+import { IXMLHttpRequestFactory } from "crunchyroll-lib/models/http/IXMLHttpRequestFactory";
 
 // Set default HttpClient
 let crossHttpClient = ccontainer.getConstructor<IHttpClient>("IHttpClient");
@@ -13,6 +14,10 @@ export function setCrossHttpClient(httpClient: ContainerConstructor<IHttpClient>
 
 export function bindCrossHttpClientAsDefault(): void {
   ccontainer.bind("IHttpClient", crossHttpClient);
+}
+
+export function setXMLHttpRequestFactory(factory: ContainerConstructor<IXMLHttpRequestFactory>): void {
+  container.bind("IXMLHttpRequestFactory", factory);
 }
 
 export interface IGlobalSettings {
