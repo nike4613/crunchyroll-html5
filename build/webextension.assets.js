@@ -31,7 +31,8 @@ const generateManifest = () => {
     'content_scripts': [
       {
         'matches': [
-          '*://www.crunchyroll.com/*'
+          '*://www.crunchyroll.com/*',
+          '*://yeppha.github.io/crunchyroll-html5/*', // API Callback endpoint
         ],
         'js': [
           'vendor/browser-polyfill.min.js',
@@ -58,6 +59,7 @@ const generateManifest = () => {
     'permissions': [
       "storage",
       "*://www.crunchyroll.com/*",
+      "*://yeppha.github.io/crunchyroll-html5/*", // API Callback endpoint
 
       // Allow the player to access these sites as otherwise it will have some
       // trouble loading the video.

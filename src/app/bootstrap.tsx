@@ -8,9 +8,8 @@ import container from 'crunchyroll-lib/config';
 import { bindCrossHttpClientAsDefault } from './config';
 import { ReadyStateChange, ReadyStateChangeEvent, ReadyState } from './libs/ReadyStateChange';
 import { EventHandler } from './libs/events/EventHandler';
-import * as parseURL from 'url-parse';
 
-import * as AniList from './libs/trackers/AniList/AniList';
+import AniList from './libs/trackers/AniList/AniList';
 
 const css = require('../styles/bootstrap.scss');
 
@@ -28,10 +27,16 @@ readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
       window.clearInterval(timer);
 
       break;
+    case ReadyState.Complete:
+      console.log(AniList.authUri);
+      break;
   }
 }, false);
 
 export function runBootstrap() {
+  let url = new URL(window.location.href); // using the builtin URL gives me searchParams
+  if (url.hostname === "yeppha.github.io" && url.pathname.startsWith("/crunchyroll-html5")) // some API callback
+    return _apiCallback(url);
 
   // Update ready state change
   readyStateChange.tick();
@@ -44,16 +49,26 @@ export function runBootstrap() {
   }
 }
 
-function getOAuth() {
-  let url = parseURL(window.location.href);
-  
-  let source = url.searchParams.get('source');
+function _apiCallback(url: URL): void {
+  let callbackType = url.pathname.substring("/crunchyroll-html5".length);
+
+  switch (callbackType) {
+    case '/auth': // oauth callback endpoint
+      _getOAuth(url);
+      break;
+  }
+
+  window.close();
+}
+
+function _getOAuth(url: URL): void {
+  let source = url.searchParams.get('auth');
 
   console.log(url);
   
   switch (source) {
-    case 'anilist':
-      AniList.setAuthKey(url.searchParams.get('access_token'));
+    case 'anilist.co':
+      //AniList.setAuthKey(url.searchParams.get('access_token')!);
       break;
   }
 
@@ -97,8 +112,10 @@ async function _runOnInteractive() {
   // Start the player
   (new Bootstrap()).run(mediaId, options);
 
+  await AniList.loadAuthentication();
+
   let name = document.querySelector("#template_body > div.new_layout > div.showmedia-trail > div > h1 > a > span")!.innerHTML;
-  let id = await AniList.getAnimeID(name);
+  let id = await AniList.getAnime(name);
   console.log(name, id);
 }
 

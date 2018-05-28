@@ -7,7 +7,7 @@ export type JsonAny = JsonAnyNonArray | JsonAnyNonArray[];
 export type NestedDictionary = { [key: string]: JsonAny };
 export type VariableDict = { [variable: string]: JsonAnyNonArray; };
 
-function createRequestInit(query: string, variables: VariableDict, authKey: string|null = null): RequestInit {
+function createRequestInit(query: string, variables: VariableDict, authKey: string|null = null, tokenType: string = "bearer"): RequestInit {
   let options: RequestInit = {
     method: 'POST',
     headers: {
@@ -22,7 +22,7 @@ function createRequestInit(query: string, variables: VariableDict, authKey: stri
 
   if (authKey !== null) {
                       /* this really shouldn't need to be here */
-    (options.headers! as { [key: string]: string })['Authorization'] = "Bearer " + authKey;
+    (options.headers! as { [key: string]: string })['Authorization'] = (tokenType === "bearer" ? "Bearer ": "") + authKey;
   }
 
   return options;
@@ -43,8 +43,8 @@ interface IGraphQLResponse {
   errors?: IGraphQLError[];
 }
 
-export async function executeQuery(query: string, vars: VariableDict, authKey: string|null = null): Promise<NestedDictionary> {
-  let response = await fetch(queryUri, createRequestInit(query, vars, authKey));
+export async function executeQuery(query: string, vars: VariableDict, authKey: string|null = null, tokenType: string = "bearer"): Promise<NestedDictionary> {
+  let response = await fetch(queryUri, createRequestInit(query, vars, authKey, tokenType));
   let json = await response.json() as IGraphQLResponse; // because usually the response will still be JSON
   if (!response.ok) { // make sure this succeeded
     if (response.status != 400) // anything but a request error
