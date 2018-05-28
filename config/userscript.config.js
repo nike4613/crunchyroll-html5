@@ -53,7 +53,7 @@ const metadata = {
     'GM.getValue',
     'GM.setValue'
   ],
-  'run-at': 'document_start', // run as soon as possible, delay loading in code
+  'run-at': 'document-start', // run as soon as possible, delay loading in code
   'connect': '*'
 };
 
