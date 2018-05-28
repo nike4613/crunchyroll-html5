@@ -8,6 +8,9 @@ import container from 'crunchyroll-lib/config';
 import { bindCrossHttpClientAsDefault } from './config';
 import { ReadyStateChange, ReadyStateChangeEvent, ReadyState } from './libs/ReadyStateChange';
 import { EventHandler } from './libs/events/EventHandler';
+import * as parseURL from 'url-parse';
+
+import * as AniList from './libs/trackers/AniList/AniList';
 
 const css = require('../styles/bootstrap.scss');
 
@@ -29,6 +32,7 @@ readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
 }, false);
 
 export function runBootstrap() {
+
   // Update ready state change
   readyStateChange.tick();
 
@@ -38,6 +42,22 @@ export function runBootstrap() {
     eventHandler.listen(document, 'readystatechange', () => readyStateChange.tick(), false);
     window.setInterval(() => readyStateChange.tick(), 100);
   }
+}
+
+function getOAuth() {
+  let url = parseURL(window.location.href);
+  
+  let source = url.searchParams.get('source');
+
+  console.log(url);
+  
+  switch (source) {
+    case 'anilist':
+      AniList.setAuthKey(url.searchParams.get('access_token'));
+      break;
+  }
+
+  window.close();
 }
 
 async function _runOnInteractive() {
@@ -76,6 +96,10 @@ async function _runOnInteractive() {
 
   // Start the player
   (new Bootstrap()).run(mediaId, options);
+
+  let name = document.querySelector("#template_body > div.new_layout > div.showmedia-trail > div > h1 > a > span")!.innerHTML;
+  let id = await AniList.getAnimeID(name);
+  console.log(name, id);
 }
 
 class Bootstrap {
