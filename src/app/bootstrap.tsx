@@ -69,6 +69,7 @@ function _getOAuth(url: URL): void {
   switch (source) {
     case 'anilist.co':
       //AniList.setAuthKey(url.searchParams.get('access_token')!);
+      AniList.readOAuthFromURL(url);
       break;
   }
 
@@ -114,7 +115,7 @@ async function _runOnInteractive() {
 
   await AniList.loadAuthentication();
 
-  let name = document.querySelector("#template_body > div.new_layout > div.showmedia-trail > div > h1 > a > span")!.innerHTML;
+  let name = document.querySelector("#template_body > div > div.showmedia-trail > div > h1 > a > span")!.innerHTML;
   let id = await AniList.getAnime(name);
   console.log(name, id);
 }
