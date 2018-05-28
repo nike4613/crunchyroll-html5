@@ -9,6 +9,8 @@ import { LocalStorageMechanism } from "./storage/mechanism/LocalStorageMechanism
 import { IMechanismSymbol, IMechanism } from "./storage/mechanism/IMechanism";
 import container from "../config/inversify.config";
 import { EmptyMechanism } from "./storage/mechanism/EmptyMechanism";
+import { IStorage, IStorageSymbol } from "./storage/IStorage";
+import { JsonStorage } from "./storage/JsonStorage";
 
 function getURL(path: string): string {
   return "chrome://crunchyroll-html5/content" + path;
@@ -53,6 +55,8 @@ fonts.push(times, timesbd, timesbi, timesi);
 fonts.push(trebuc, trebucbd, trebucbi, trebucit);
 
 async function main() {
+  container.bind<IStorage>(IStorageSymbol).to(JsonStorage);
+  
   if (await LocalStorageMechanism.isAvailable()) {
     container.bind<IMechanism>(IMechanismSymbol).to(LocalStorageMechanism);
   } else {

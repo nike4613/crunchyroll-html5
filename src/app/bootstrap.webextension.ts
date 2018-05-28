@@ -7,6 +7,8 @@ import container from "../config/inversify.config";
 import { IMechanism, IMechanismSymbol } from "./storage/mechanism/IMechanism";
 import { WebExtensionMechanism } from "./storage/mechanism/WebExtensionMechanism";
 import { XMLHttpRequestFactory } from "./http/XMLHttpRequestFactory";
+import { IStorage, IStorageSymbol } from "./storage/IStorage";
+import { ObjectStorage } from "./storage/ObjectStorage";
 
 function getURL(path: string): string {
   if (chrome && chrome.extension && typeof chrome.extension.getURL === "function") {
@@ -55,6 +57,7 @@ fonts.push(times, timesbd, timesbi, timesi);
 // Trebuchet MS
 fonts.push(trebuc, trebucbd, trebucbi, trebucit);
 
+container.bind<IStorage>(IStorageSymbol).to(ObjectStorage);
 container.bind<IMechanism>(IMechanismSymbol).to(WebExtensionMechanism);
 
 runBootstrap();

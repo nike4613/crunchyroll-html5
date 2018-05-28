@@ -11,12 +11,12 @@ export class WebExtensionMechanism implements IMechanism {
     await browser.storage.local.set(obj);
   }
 
-  async get(key: string): Promise<string> {
+  async get(key: string): Promise<any> {
     const values = await browser.storage.local.get(key);
     const value = values[key];
-    if (typeof value !== "string" && value !== null) {
+    /*if (typeof value !== "string" && value !== null) {
       throw StorageError.InvalidValue;
-    }
+    }*/
     return value;
   }
 

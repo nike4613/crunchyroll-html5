@@ -9,6 +9,4 @@ const container = new Container({
   autoBindInjectable: true
 });
 
-container.bind<IStorage>(IStorageSymbol).to(JsonStorage);
-
 export default container;

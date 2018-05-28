@@ -11,6 +11,8 @@ import { GreasemonkeyMechanism } from "./storage/mechanism/GreasemonkeyMechanism
 import { LegacyGreasemonkeyMechanism } from "./storage/mechanism/LegacyGreasemonkeyMechanism";
 import { LocalStorageMechanism } from "./storage/mechanism/LocalStorageMechanism";
 import { EmptyMechanism } from "./storage/mechanism/EmptyMechanism";
+import { IStorage, IStorageSymbol } from "./storage/IStorage";
+import { JsonStorage } from "./storage/JsonStorage";
 
 setCrossHttpClient(GreasemonkeyHttpClient);
 
@@ -30,6 +32,8 @@ addFile('default.ttf', libassDefaultFontUrl);
 addFile('fonts.conf', libassFontsConfigUrl);
 
 async function main() {
+  container.bind<IStorage>(IStorageSymbol).to(JsonStorage);
+  
   if (await LegacyGreasemonkeyMechanism.isAvailable()) {
     container.bind<IMechanism>(IMechanismSymbol).to(LegacyGreasemonkeyMechanism);
   } else if (await GreasemonkeyMechanism.isAvailable()) {
