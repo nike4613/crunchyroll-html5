@@ -42,7 +42,9 @@ const metadata = {
   'author': utils.parseAuthor(package['author']),
   'match': [
     'http://www.crunchyroll.com/*',
-    'https://www.crunchyroll.com/*'
+    'https://www.crunchyroll.com/*',
+    'http://yeppha.github.io/crunchyroll-html5/*',
+    'https://yeppha.github.io/crunchyroll-html5/*'
   ],
   'source': package['repository']['url'],
   'grant': [
