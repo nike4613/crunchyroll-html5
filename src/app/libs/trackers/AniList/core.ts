@@ -17,7 +17,8 @@ function createRequestInit(query: string, variables: VariableDict, authKey: stri
     body: JSON.stringify({
       query: query,
       variables: variables
-    })
+    }),
+    mode: 'cors'
   };
 
   if (authKey !== null) {
