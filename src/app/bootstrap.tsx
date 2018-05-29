@@ -33,10 +33,12 @@ readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
   }
 }, false);
 
-export function runBootstrap() {
+export function runBootstrap(): void {
   let url = new URL(window.location.href); // using the builtin URL gives me searchParams
-  if (url.hostname === "yeppha.github.io" && url.pathname.startsWith("/crunchyroll-html5")) // some API callback
-    return _apiCallback(url);
+  if (url.hostname === "yeppha.github.io" && url.pathname.startsWith("/crunchyroll-html5")) {// some API callback
+    _apiCallback(url);
+    return;
+  }
 
   // Update ready state change
   readyStateChange.tick();
