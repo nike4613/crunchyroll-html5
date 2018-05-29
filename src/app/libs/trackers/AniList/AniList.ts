@@ -56,6 +56,7 @@ function setAuthKey(key: string, expiresIn: number, type: string) {
 }
 
 let defaultObj = new (class AniListTracker implements ITracker {
+
   get authUri(): string {
     let url = new URL("https://anilist.co/api/v2/oauth/authorize");
     url.searchParams.set('response_type', 'token');
@@ -63,6 +64,7 @@ let defaultObj = new (class AniListTracker implements ITracker {
     // this is my testing client ID; redirects to https://yeppha.github.io/crunchyroll-html5/auth?auth=anilist.co
     return url.toString();
   }
+
   loadAuthentication(saved: NestedDictionary): void {
     let object = <IAuthSerializer><any>saved;
 
@@ -75,6 +77,7 @@ let defaultObj = new (class AniListTracker implements ITracker {
     if (Date.now() > object.expires_at)
       Trackers.authenticate(trackerName);
   }
+
   saveAuthentication(): NestedDictionary {
     let object = {
       key: authKey,
@@ -83,10 +86,12 @@ let defaultObj = new (class AniListTracker implements ITracker {
     } as IAuthSerializer;
     return <NestedDictionary><any>object;
   }
+
   readOAuthFromURL(url: URL) {
     let tokenset = new URL("about:blank/?" + url.hash.substring(1)).searchParams;
     setAuthKey(tokenset.get("access_token")!, parseInt(tokenset.get('expires_in')!), tokenset.get('token_type')!)
   }
+
   async getAnime(name: string, perPage: number = 10): Promise<IAnilistAnime> {
     let anime: IAnilistAnime|undefined = undefined;
     let hasNextPage: boolean = true;
@@ -126,6 +131,7 @@ let defaultObj = new (class AniListTracker implements ITracker {
     else
       throw new Error("Anime '" + name + "' could not be found on AniList");
   }
+  
 })();
 
 export const trackerName = "AniList";
