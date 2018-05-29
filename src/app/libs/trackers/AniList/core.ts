@@ -1,11 +1,6 @@
-
+import { VariableDict, NestedDictionary } from "../ITracker";
 
 const queryUri = 'https://graphql.anilist.co';
-
-export type JsonAnyNonArray = NestedDictionary | string | number | boolean | null;
-export type JsonAny = JsonAnyNonArray | JsonAnyNonArray[];
-export type NestedDictionary = { [key: string]: JsonAny };
-export type VariableDict = { [variable: string]: JsonAnyNonArray; };
 
 function createRequestInit(query: string, variables: VariableDict, authKey: string|null = null, tokenType: string = "bearer"): RequestInit {
   let options: RequestInit = {

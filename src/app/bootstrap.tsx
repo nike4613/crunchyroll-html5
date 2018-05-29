@@ -8,8 +8,8 @@ import container from 'crunchyroll-lib/config';
 import { bindCrossHttpClientAsDefault } from './config';
 import { ReadyStateChange, ReadyStateChangeEvent, ReadyState } from './libs/ReadyStateChange';
 import { EventHandler } from './libs/events/EventHandler';
-
-import AniList from './libs/trackers/AniList/AniList';
+import Trackers from './libs/trackers/Trackers';
+import { trackerName as anilistTrackerName } from './libs/trackers/AniList/AniList';
 
 const css = require('../styles/bootstrap.scss');
 
@@ -28,7 +28,7 @@ readyStateChange.listen('readystatechange', (e: ReadyStateChangeEvent) => {
 
       break;
     case ReadyState.Complete:
-      console.log(AniList.authUri);
+      Trackers.authenticate(anilistTrackerName);
       break;
   }
 }, false);
@@ -54,23 +54,23 @@ function _apiCallback(url: URL): void {
 
   switch (callbackType) {
     case '/auth': // oauth callback endpoint
-      _getOAuth(url);
-      break;
-  }
+      let source = url.searchParams.get('auth');
 
-  window.close();
-}
-
-function _getOAuth(url: URL): void {
-  let source = url.searchParams.get('auth');
-
-  console.log(url);
-  
-  switch (source) {
-    case 'anilist.co':
-      //AniList.setAuthKey(url.searchParams.get('access_token')!);
-      AniList.readOAuthFromURL(url);
-      break;
+      console.log(url);
+    
+      if (source) {
+        let tracker = Trackers.getTrackerByUri(source);
+    
+        if (tracker) {
+          tracker.readOAuthFromURL(url);
+        }
+    
+        Trackers.saveAuthInfoFor(Trackers.getNameByUri(source));
+        Trackers.sendAuthenticatedMessage();
+      }
+    
+      window.close();
+    break;
   }
 
   window.close();
@@ -113,10 +113,10 @@ async function _runOnInteractive() {
   // Start the player
   (new Bootstrap()).run(mediaId, options);
 
-  await AniList.loadAuthentication();
+  await Trackers.loadAuthInfo();
 
   let name = document.querySelector("#template_body > div > div.showmedia-trail > div > h1 > a > span")!.innerHTML;
-  let id = await AniList.getAnime(name);
+  let id = await Trackers.getTrackerByName(anilistTrackerName).getAnime(name);
   console.log(name, id);
 }
 
