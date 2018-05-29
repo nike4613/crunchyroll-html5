@@ -44,7 +44,9 @@ const metadata = {
     'http://www.crunchyroll.com/*',
     'https://www.crunchyroll.com/*',
     'http://yeppha.github.io/crunchyroll-html5/*',
-    'https://yeppha.github.io/crunchyroll-html5/*'
+    'https://yeppha.github.io/crunchyroll-html5/*',
+    
+    "*://graphql.anilist.co/*",
   ],
   'source': package['repository']['url'],
   'grant': [

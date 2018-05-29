@@ -61,6 +61,7 @@ const generateManifest = () => {
       "*://www.crunchyroll.com/*",
       "*://yeppha.github.io/crunchyroll-html5/*", // API Callback endpoint
 
+      "*://graphql.anilist.co/*",
       // Allow the player to access these sites as otherwise it will have some
       // trouble loading the video.
       "*://*.vrv.co/*",
