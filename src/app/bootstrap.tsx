@@ -49,7 +49,7 @@ export function runBootstrap() {
   }
 }
 
-function _apiCallback(url: URL): void {
+async function _apiCallback(url: URL): Promise<void> {
   let callbackType = url.pathname.substring("/crunchyroll-html5".length);
 
   switch (callbackType) {
@@ -65,8 +65,8 @@ function _apiCallback(url: URL): void {
           tracker.readOAuthFromURL(url);
         }
     
-        Trackers.saveAuthInfoFor(Trackers.getNameByUri(source));
-        Trackers.sendAuthenticatedMessage();
+        await Trackers.saveAuthInfoFor(Trackers.getNameByUri(source));
+        await Trackers.sendAuthenticatedMessage();
       }
     
       window.close();
